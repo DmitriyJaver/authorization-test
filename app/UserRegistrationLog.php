@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserRegistationLog extends Model
+class UserRegistrationLog extends Model
 {
-    protected $guarded = [];
+    protected $fillable = ['user_id'];
 
     public function registeredUser()
     {

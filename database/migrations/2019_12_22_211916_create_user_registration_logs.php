@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserRegistrationLog extends Migration
+class CreateUserRegistrationLogs extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateUserRegistrationLog extends Migration
      */
     public function up()
     {
-        Schema::create('user_registration_log', function (Blueprint $table) {
+        Schema::create('user_registration_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->timestamp('user_registration_time');
-
+           // $table->dateTime('created_at', 0);
+            $table->timestamp('created_at')->useCurrent();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
