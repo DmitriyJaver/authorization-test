@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'country_code', 'phone'
     ];
 
     /**
@@ -53,9 +53,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 'user_id' => $user->id,
             ]);
-
                    });
+    }
 
-
+    public function tokens()
+    {
+        return $this->hasMany(Token::class);
+    }
+    public function getPhoneNumber()
+    {
+        return $this->country_code.$this->phone;
     }
 }
