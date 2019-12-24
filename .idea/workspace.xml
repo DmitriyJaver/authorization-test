@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="87f8d629-159c-4ebf-be2d-0e02347188f6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/views/auth/code.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/register.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/register.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/new.css" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -151,7 +151,7 @@
       <option name="presentableId" value="Default" />
       <updated>1577027032176</updated>
       <workItem from="1577027033241" duration="18741000" />
-      <workItem from="1577174609031" duration="9423000" />
+      <workItem from="1577174609031" duration="11353000" />
     </task>
     <servers />
   </component>
