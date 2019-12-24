@@ -34,6 +34,9 @@ class LoginController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+
+
+
     /**
      * Create a new controller instance.
      *
@@ -46,6 +49,7 @@ class LoginController extends Controller
 
     public function Login(Request $request)
     {
+        $numberOfTry = 5;
         $this->validateLogin($request);
 
         //retrieveByCredentials
@@ -58,6 +62,7 @@ class LoginController extends Controller
                 session()->put("token_id", $token->id);
                 session()->put("user_id", $user->id);
                 session()->put("remember", $request->get('remember'));
+                session()->put("number_of_try", $numberOfTry);
 
                 return redirect("code");
             }
@@ -77,18 +82,26 @@ class LoginController extends Controller
 
     public function showCodeForm()
     {
+
+
         if (! session()->has("token_id")) {
             return redirect("login");
         }
+
+
 
         return view("auth.code");
     }
 
     /**
      * Store and verify user second factor.
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function storeCodeForm(Request $request)
     {
+
+
         // throttle for too many attempts
         if (! session()->has("token_id", "user_id")) {
             return redirect("login");
@@ -100,7 +113,19 @@ class LoginController extends Controller
             $request->code !== $token->code ||
             (int)session()->get("user_id") !== $token->user->id
         ) {
-            return redirect("code")->withErrors(["Invalid token"]);
+
+
+            $count = session()->get('number_of_try');
+
+            if($count > 1) {
+                $count--;
+                session()->put('number_of_try', $count);
+
+                return redirect("code")->withErrors(["Invalid code." . ' Attempts left : ' . $count]);
+            }
+            else {
+                return redirect('/')->withErrors(["The number of code entry attempts has ended. The following attempts will be possible after 1 hour."]);;
+            }
         }
 
         $token->used = true;
@@ -111,4 +136,6 @@ class LoginController extends Controller
 
         return redirect('home');
     }
+
+
 }

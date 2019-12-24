@@ -8,20 +8,23 @@
                     <div class="card-header">{{ __('SMS Authentication') }}</div>
 
                     <div class="card-body">
+
+                        @include("partials.errors")
+
                         <form method="POST" role="form" action="{{ url('/code') }}">
                             @csrf
 
                             <div class="form-group row">
-                                <label for="code" class="col-md-4 col-form-label text-md-right">{{ __('Enter 4-digits SMS code') }}</label>
+                                <label for="code" class="col-md-4 col-form-label text-md-right">{{ __('Enter 4-digits SMS code') }} : {{(\App\Token::find(session()->get('token_id')))->code}}</label>
 
                                 <div class="col-md-6">
-                                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" required autocomplete="code" autofocus>
+                                    <input id="code" type="text" class="form-control" name="code" value="{{ old('code') }}" required autofocus>
 
-                                    @error('code')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                    @if ($errors->has('code'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('code') }}</strong>
                                     </span>
-                                    @enderror
+                                    @endif
                                 </div>
                             </div>
 
