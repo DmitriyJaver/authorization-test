@@ -72,5 +72,27 @@ class Token extends Model
         return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
     }
 
+    public function sendCode()
+    {
+        if (! $this->user) {
+            throw new \Exception("No user attached to this token.");
+        }
+
+        if (! $this->code) {
+            $this->code = $this->generateCode();
+        }
+        /**
+         *for this code to work, you need to connect the Twilio package
+         */
+        /*try {
+            app('twilio')->messages->create($this->user->getPhoneNumber(),
+                ['from' => env('TWILIO_NUMBER'), 'body' => "Your verification code is {$this->code}"]);
+        } catch (\Exception $ex) {
+            return false; //enable to send SMS
+        }*/
+
+        return true;
+    }
+
 
 }

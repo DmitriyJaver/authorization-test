@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\User;
 use App\UserRegistationLog;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -51,9 +52,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name'          => ['required', 'string', 'max:255'],
+            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'      => ['required', 'string', 'min:8', 'confirmed'],
+            'country_code'  => ['required', 'max:4'],
+            'phone'         => ['required'],
         ]);
     }
 
@@ -71,5 +74,11 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
 
         ]);
+    }
+    protected function registered(Request $request, $user)
+    {
+        $user->country_code = $request->country_code;
+        $user->phone = $request->phone;
+        $user->save();
     }
 }
