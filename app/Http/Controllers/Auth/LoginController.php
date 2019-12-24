@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Token;
-use http\Env\Request;
+//use http\Env\Request;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Session\Store;
 
 class LoginController extends Controller
 {
@@ -52,9 +55,9 @@ class LoginController extends Controller
             ]);
 
             if ($token->sendCode()) {
-                session()->set("token_id", $token->id);
-                session()->set("user_id", $user->id);
-                session()->set("remember", $request->get('remember'));
+                session()->put("token_id", $token->id);
+                session()->put("user_id", $user->id);
+                session()->put("remember", $request->get('remember'));
 
                 return redirect("code");
             }
@@ -70,5 +73,42 @@ class LoginController extends Controller
             ->withErrors([
                 $this->username() => Lang::get('auth.failed'),
             ]);
+    }
+
+    public function showCodeForm()
+    {
+        if (! session()->has("token_id")) {
+            return redirect("login");
+        }
+
+        return view("auth.code");
+    }
+
+    /**
+     * Store and verify user second factor.
+     */
+    public function storeCodeForm(Request $request)
+    {
+        // throttle for too many attempts
+        if (! session()->has("token_id", "user_id")) {
+            return redirect("login");
+        }
+
+        $token = Token::find(session()->get("token_id"));
+        if (! $token ||
+            ! $token->isValid() ||
+            $request->code !== $token->code ||
+            (int)session()->get("user_id") !== $token->user->id
+        ) {
+            return redirect("code")->withErrors(["Invalid token"]);
+        }
+
+        $token->used = true;
+        $token->save();
+        $this->guard()->login($token->user, session()->get('remember', false));
+
+        session()->forget('token_id', 'user_id', 'remember');
+
+        return redirect('home');
     }
 }
