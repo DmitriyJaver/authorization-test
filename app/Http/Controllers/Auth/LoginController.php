@@ -169,7 +169,9 @@ class LoginController extends Controller
         $token->save();
         $this->guard()->login($token->user, session()->get('remember', false));
 
-        session()->forget('token_id', 'user_id', 'remember', 'number_of_try');
+        session()->forget([
+            'token_id', 'user_id', 'remember', 'number_of_try'
+        ]);
 
         return redirect('home');
     }

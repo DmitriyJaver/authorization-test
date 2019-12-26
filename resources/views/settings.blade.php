@@ -19,7 +19,7 @@
 
                                         <label class="form-check-label" for="useSmsVerify">
                                             <input class="form-check-input" type="checkbox" name="useSmsVerify"  {{ $user->use_sms_verify ? 'checked' : '' }}>
-                                            {{ __('Use two factor verificationVer. Add SMS verification') }} {{$user->name}}
+                                            {{ __('Use two factor verification. Add SMS verification') }} {{$user->name}}
                                         </label>
                                     </div>
                                 </div>
