@@ -21,3 +21,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/code', 'Auth\\LoginController@showCodeForm');
 Route::post('/code', 'Auth\\LoginController@storeCodeForm');
+
+Route::get('/settings', 'HomeController@showSettings')->name('settings');
+Route::post('/settings', 'HomeController@storeSettings');

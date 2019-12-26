@@ -22,10 +22,12 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('country_code', 4)->nullable();
             $table->string('phone')->nullable();
+            $table->boolean('use_sms_verify')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

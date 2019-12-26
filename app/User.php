@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'country_code', 'phone'
+        'name', 'email', 'password', 'country_code', 'phone', 'use_sms_verify'
     ];
 
     /**
@@ -63,5 +63,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getPhoneNumber()
     {
         return $this->country_code.$this->phone;
+    }
+
+    public function used_sms_verify($used = true)
+    {
+        $this->update(compact('used'));
     }
 }
