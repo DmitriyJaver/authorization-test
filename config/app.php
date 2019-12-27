@@ -165,6 +165,8 @@ return [
         /*
          * Package Service Providers...
          */
+        STS\Fixer\FixerServiceProvider::class,
+
 
         /*
          * Application Service Providers...
