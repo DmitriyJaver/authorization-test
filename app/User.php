@@ -48,17 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserRegistrationLog::class, 'user_id');
     }
 
-  /*  protected static function boot()
-    {
-        parent::boot();
-        static::created(function ($user){
-
-            UserRegistrationLog::insert([
-
-                'user_id' => $user->id,
-            ]);
-                   });
-    }*/
 
     public function tokens()
     {
