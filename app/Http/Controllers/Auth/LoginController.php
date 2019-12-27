@@ -82,7 +82,6 @@ class LoginController extends Controller
 
             $numberOfTry = 5;
 
-
             if ($user = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
                 $token = Token::create([
                     'user_id' => $user->id

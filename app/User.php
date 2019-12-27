@@ -39,12 +39,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    protected $dispatchesEvents = [
+        'created' => UserCreated::class
+    ];
+
     public function userRegistrationsLog()
     {
         return $this->hasOne(UserRegistrationLog::class, 'user_id');
     }
 
-    protected static function boot()
+  /*  protected static function boot()
     {
         parent::boot();
         static::created(function ($user){
@@ -54,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 'user_id' => $user->id,
             ]);
                    });
-    }
+    }*/
 
     public function tokens()
     {
