@@ -3996,7 +3996,6 @@ input[type=button].btn-block {
   -webkit-box-align: stretch;
           align-items: stretch;
   width: 100%;
-
 }
 
 .input-group > .form-control,
@@ -4095,9 +4094,6 @@ input[type=button].btn-block {
 
 .input-group-prepend {
   margin-right: -1px;
-}
-.input-group-addon {
-    height: calc(1.6em + 0.75rem + 2px);
 }
 
 .input-group-append {
