@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Token;
 //use http\Env\Request;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Lang;
@@ -46,29 +45,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * override method
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View*
-     */
-    public function showLoginForm()
-    {
-        $attemptEndTime = session()->get('attempt_end_time');
-        $now = Carbon::now();
-
-        if(isset($attemptEndTime) && $attemptEndTime->diffInMinutes($now)<= 60){
-            $timeLeft = $attemptEndTime->diffInMinutes($now);
-            $timeLeft1 = 60 - $timeLeft;
-
-            return redirect('/')->withErrors(["Try again after: " . $timeLeft1.' minutes'. 'now: '. $now. 'diff: '. $timeLeft]);
-        }
-        else{
-
-            session()->forget('attempt_end_time');
-            return view('auth.login');
-        }
     }
 
     public function Login(Request $request)
@@ -148,10 +124,7 @@ class LoginController extends Controller
                 return redirect("code")->withErrors(["Invalid code." . ' Attempts left : ' . $count]);
             }
             else {
-                session()->forget(number_of_try);
-                session()->put('attempt_end_time', Carbon::now());
-
-                return redirect('/')->withErrors(["The number of code entry attempts has ended. The following attempts will be possible after 1 hour."]);
+                return redirect('/')->withErrors(["The number of code entry attempts has ended. The following attempts will be possible after 1 hour."]);;
             }
         }
 
