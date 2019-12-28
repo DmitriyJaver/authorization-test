@@ -37,7 +37,9 @@ class HomeController extends Controller
     public function storeSettings()
     {
         $user = auth()->user();
+        //dd($user);
 
+        //$user->used_sms_verify(request()->has('use_sms_verify'));
         if ($user->use_sms_verify == false){
             $user->use_sms_verify = true;
             $user->save();

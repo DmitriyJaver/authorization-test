@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Token;
 //use http\Env\Request;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -74,45 +73,35 @@ class LoginController extends Controller
 
     public function Login(Request $request)
     {
+        $numberOfTry = 5;
         $this->validateLogin($request);
 
-       $user = User::where('email', $request->email)->first();
+        //retrieveByCredentials
+        if ($user = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
+            $token = Token::create([
+                'user_id' => $user->id
+            ]);
 
-        if ($user->use_sms_verify == true) {
+            if ($token->sendCode()) {
+                session()->put("token_id", $token->id);
+                session()->put("user_id", $user->id);
+                session()->put("remember", $request->get('remember'));
+                session()->put("number_of_try", $numberOfTry);
 
-            $numberOfTry = 5;
-
-
-            if ($user = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
-                $token = Token::create([
-                    'user_id' => $user->id
-                ]);
-
-                if ($token->sendCode()) {
-                    session()->put("token_id", $token->id);
-                    session()->put("user_id", $user->id);
-                    session()->put("remember", $request->get('remember'));
-                    session()->put("number_of_try", $numberOfTry);
-
-                    return redirect("code");
-                }
-
-                $token->delete();// delete token because it can't be sent
-                return redirect('/login')->withErrors([
-                    "Unable to send verification code"
-                ]);
+                return redirect("code");
             }
 
-            return redirect()->back()
-                ->withInputs()
-                ->withErrors([
-                    $this->username() => Lang::get('auth.failed'),
-                ]);
-            }else{
-            //dd($request);
-            $this->guard()->login($user, session()->get('remember', false));
-            return redirect('home');
+            $token->delete();// delete token because it can't be sent
+            return redirect('/login')->withErrors([
+                "Unable to send verification code"
+            ]);
         }
+
+        return redirect()->back()
+            ->withInputs()
+            ->withErrors([
+                $this->username() => Lang::get('auth.failed'),
+            ]);
     }
 
     public function showCodeForm()
@@ -165,11 +154,12 @@ class LoginController extends Controller
                 return redirect('/')->withErrors(["The number of code entry attempts has ended. The following attempts will be possible after 1 hour."]);
             }
         }
+
         $token->used = true;
         $token->save();
         $this->guard()->login($token->user, session()->get('remember', false));
 
-        session()->forget('token_id', 'user_id', 'remember', 'number_of_try');
+        session()->forget('token_id', 'user_id', 'remember');
 
         return redirect('home');
     }
