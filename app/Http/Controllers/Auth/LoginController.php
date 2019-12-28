@@ -63,7 +63,7 @@ class LoginController extends Controller
             $timeLeft = $attemptEndTime->diffInMinutes($now);
             $timeLeft1 = 60 - $timeLeft;
 
-            return redirect('/')->withErrors(["Try again after: " . $timeLeft1 . ' minutes']);
+            return redirect('/')->withErrors(["Try again after: " . $timeLeft1.' minutes'. 'now: '. $now. 'diff: '. $timeLeft]);
         }
         else{
 
@@ -158,7 +158,7 @@ class LoginController extends Controller
                 return redirect("code")->withErrors(["Invalid code." . ' Attempts left : ' . $count]);
             }
             else {
-                session()->forget(['number_of_try']);
+                session()->forget(number_of_try);
                 session()->put('attempt_end_time', Carbon::now());
 
                 return redirect('/')->withErrors(["The number of code entry attempts has ended. The following attempts will be possible after 1 hour."]);
