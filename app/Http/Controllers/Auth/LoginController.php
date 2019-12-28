@@ -8,7 +8,6 @@ use App\Token;
 //use http\Env\Request;
 use App\User;
 use Carbon\Carbon;
-use http\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Lang;
@@ -77,9 +76,7 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        if ($user = User::where('email', '=', $request->email)->exists()) {
-
-            $user = User::where('email', '=', $request->email)->first();
+       $user = User::where('email', $request->email)->first();
 
         if ($user->use_sms_verify == true) {
 
@@ -110,16 +107,11 @@ class LoginController extends Controller
                 ->withErrors([
                     $this->username() => Lang::get('auth.failed'),
                 ]);
-
-        } else {
+            }else{
             //dd($request);
             $this->guard()->login($user, session()->get('remember', false));
             return redirect('home');
         }
-    }
-
-        return $this->sendFailedLoginResponse($request);
-
     }
 
     public function showCodeForm()
