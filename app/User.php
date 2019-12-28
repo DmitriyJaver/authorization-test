@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Events\UserCreated;
-use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,21 +39,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function userRegistrationsLog()
     {
-        return $this->hasOne(UserRegistrationLog::class, 'user_id');
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::created(function ($user){
-
-            UserRegistrationLog::insert([
-
-                'user_id' => $user->id,
-            ]);
-
-                   });
-
-
+        return $this->hasOne(UserRegistationLog::class, 'user_id');
     }
 }
