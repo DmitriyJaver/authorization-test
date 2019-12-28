@@ -24,9 +24,17 @@ class Token extends Model
         parent::__construct($attributes);
     }
 
-    public function generateCode()
+    public function generateCode($codeLength = 4)
     {
-        $code = mt_rand(1000, 9999);
+        /**
+         *Static value used for test
+         *To generate random code, uncomment the code below and comment out the static assignment.
+         */
+        /*$min = pow(10, $codeLength);
+        $max = $min * 10 - 1;
+        $code = mt_rand($min, $max);*/
+
+        $code = 1234;
 
         return $code;
     }
